@@ -1,0 +1,14 @@
+{
+  "name": "homebridge-hive-lightbulb",
+  "version": "1.0.1",
+  "description": "This HomeBridge Plugin adds support for the Hive Active Heating motion Lightbulbs to be controlled in the Home app in iOS and via Siri.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hive"
+  ],
+  "author": "James Mitchell <jamesodmitchell@gmail.com> (www.jodm.co.uk)",
+  "license": "ISC"
+}
