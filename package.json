@@ -8,7 +8,11 @@
   },
   "keywords": [
     "hive"
+    "homebridge",
+    "bulb",
+    "british gas"
   ],
   "author": "James Mitchell <jamesodmitchell@gmail.com> (www.jodm.co.uk)",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": { "type" : "git", "url" : "https://github.com/jodm/homebridge-hive-lightbulb" }
 }
