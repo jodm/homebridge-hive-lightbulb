@@ -17,6 +17,9 @@
     "node": ">=0.12.0",
     "homebridge": ">=0.2.0"
   },
+  "dependencies": {
+    "request": "^2.65.0"
+  },
   "author": "James Mitchell <jamesodmitchell@gmail.com> (www.jodm.co.uk)",
   "license": "ISC",
   "repository": { "type" : "git", "url" : "https://github.com/jodm/homebridge-hive-lightbulb" }
