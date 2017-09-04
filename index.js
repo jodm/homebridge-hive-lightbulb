@@ -22,7 +22,7 @@ function HiveLightbulb(log, config) {
 		} else {
 			this.log("HiveLightbulb: Unable to login. Error: " + error);
 		}
-	})
+	}).bind(this);
 	this.cachedNode = null;
 	this.debug = config.hasOwnProperty('debug') ? config.debug : false;
 }
