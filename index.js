@@ -18,7 +18,6 @@ function HiveLightbulb(log, config) {
 	this.mainDataCallbacks = [];
 	this.login(function(key, error) {
 		if(key) {
-			this.log("Key: " + key)
 			this.findNode(function(node, error) {
 				if(error) { this.log("HiveLightbulb: findNode Error: " + error) }
 			}.bind(this))
@@ -67,7 +66,7 @@ HiveLightbulb.prototype = {
 			if(!error) {
 				jsonBody = JSON.parse(body);
 
-				for(var i = 0; i < body.nodes.length; i++ ) {
+				for(var i = 0; i < jsonBody.nodes.length; i++ ) {
 
 					if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
 						
