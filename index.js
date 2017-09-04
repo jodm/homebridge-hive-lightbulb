@@ -16,17 +16,13 @@ function HiveLightbulb(log, config) {
 	this.password = config.password;
 	this.id = config.hasOwnProperty('id') ? config.id : null;
 	this.mainDataCallbacks = [];
-	this.getNewApiKey(function(error){
-		if ( error ) {
-			this.log("Could not log into Hive");
-			this.log(error);
-		} else {
-			this.log( "Logged In" );
-			this.getMainData(function(){},true);
+	this.login(function(key, error) {
+		if(key) {
+			this.findNode(null)
 		}
-	}.bind(this));
+	})
 	this.cachedDataTime = null;
-	this.cachedMainData = null;
+	this.cachedNode = null;
 	this.debug = config.hasOwnProperty('debug') ? config.debug : false;
 }
 
@@ -44,36 +40,11 @@ HiveLightbulb.prototype = {
 	 * Get a new API key
 	 */
 
-	getNewApiKey: function(callback) {	
-		this.log("Logging into Hive...");	
-		request.post({
-			url: "https://api-prod.bgchprod.info:443/omnia/auth/sessions",
-			headers: {
-				'Content-Type': 'application/vnd.alertme.zoo-6.1+json',
-				'Accept': 'application/vnd.alertme.zoo-6.1+json',
-				'X-Omnia-Client': 'Hive Web Dashboard'
-			},
-			body: JSON.stringify({
-				"sessions": [{
-					"username": this.username,
-					"password": this.password,
-					"caller": "WEB"
-				}]
-			})
-		},
-		function(error, response, body) {
-			try {
-				var json = JSON.parse(body);
-				if ( json.error ) {
-					callback( json.error.reason )
-				} else {
-					this.apiKey = json.sessions[0].sessionId;
-					callback( null );
-				}
-			} catch (e) {
-				callback( "JSON Parse Error\n" + body );
-			}
-		}.bind(this));		
+	login: function(callback) {	
+		this.getAPIKey(function(key, error) {
+			this.apiKey = key
+			if(callback) { callback(key, error); }
+		});		
 	},
 	
 	/**
@@ -81,94 +52,35 @@ HiveLightbulb.prototype = {
 	 *
 	 * callback( error )
 	 */
-	getMainData: function(callback,showIds) {
+
+	findNode: function(callback) {
 		
 		/* If we don't have an API key, don't even bother */
-		if ( !this.apiKey ) {
-			callback( "No API key" );
-		}
+		if (!this.apiKey ) { callback( "Error: findNode - Not logged in." ); }
 		
-		/* If we have a cache from within 2 seconds, use that */
-		if ( this.cachedDataTime && this.cachedDataTime > Date.now() - 1000 ) {
-			callback( null, this.cachedMainData );
-			return;
-		}
-		
-		/* If we have already started doing this, just add our callback to the queue to run when we're done */
-		if ( this.mainDataCallbacks.length ) {
-			this.mainDataCallbacks.push( callback );
-			return;
-		}
-		this.mainDataCallbacks.push( callback );
-		
-		/* Still here? Define the sucess handler... */
-		var successHandler = function(body){
-			/* Parse the response */
-			for ( var i = 0; i < body.nodes.length; i++ ) {
+		this.getNodes(function(error, response, body) {	
 
-				if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
-					var name = body.nodes[i].name;
-					if (name !== this.name ) {
-						this.log("Ignoring " + name);
-						continue;
+			if(!error) {
+				jsonBody = JSON.parse(body);
+
+				for ( var i = 0; i < body.nodes.length; i++ ) {
+
+					if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
+						if (body.nodes[i].name !== this.name) { continue; }
+
+						this.cachedNode = body.nodes[i];
+						this.log("findNode: Light Found: id: " + body.nodes[i].id + " name:" + name);
+						if(callback) { callback( null, this.cachedNode ); }
+						break;
 					}
-
-					this.cachedMainData = body.nodes[i];
-					this.log("Found light " + body.nodes[i].id + ", name:" + name);
 				}
+
 			}
 
-			this.cachedDataTime = Date.now()
-			
-			/* Run our callbacks */
-			for ( var i = 0; i < this.mainDataCallbacks.length; i++ ) {
-				this.mainDataCallbacks[i]( null, this.cachedMainData );
-			}
-			this.mainDataCallbacks = [];
-		}.bind(this);
+		})
+	},
+	
 
-		/* ...and make the call */
-		this._getMainData(function(error, response, body) {	
-			if ( this.debug ) {
-				this.log( response );
-			}
-			body = JSON.parse(body);
-			if ( body.errors ) {
-				this.getNewApiKey(function(error){
-					this._getMainData(function(error, response, body) {
-						body = JSON.parse(body);
-						if ( body.errors ) {
-							this.log( body.errors );
-						} else {
-							successHandler(body);
-						}
-					}.bind(this));
-				}.bind(this));
-				return;
-			}
-			successHandler(body);
-			
-		}.bind(this));		
-	},
-	
-	/**
-	 * Get the main data from Hive's API
-	 *
-	 * callback( error )
-	 */
-	_getMainData: function(callback) {
-		this.log( "Fetching data from Hive API" );		
-		request({
-			url: "https://api-prod.bgchprod.info:443/omnia/nodes",
-			headers: {
-				'Content-Type': 'application/vnd.alertme.zoo-6.1+json',
-				'Accept': 'application/vnd.alertme.zoo-6.1+json',
-				'X-Omnia-Client': 'Hive Web Dashboard',
-				'X-Omnia-Access-Token': this.apiKey
-			}
-		}, callback );
-	},
-	
 	/* -------------------- */
 	/* !Services */
 	/* -------------------- */
@@ -178,14 +90,8 @@ HiveLightbulb.prototype = {
 		/**
 		 * Sensor status
 		 */
-		this.lightService.getCharacteristic(Characteristic.On)
-			.on('get', function(callback) {
-				this.getMainData(function(error,data){
-					var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
-					this.log( "On: " + isOn );
-					callback( error, isOn );
-				}.bind(this));
-			}.bind(this));
+		this.lightService.getCharacteristic(Characteristic.On).on('get', this.getPowerState.bind(this))
+		this.lightService.getCharacteristic(Characteristic.On).on('set', this.setPowerState.bind(this))
 
 		
 		/* --------------------- */
@@ -199,4 +105,90 @@ HiveLightbulb.prototype = {
 		
 		return [this.lightService,this.informationService];
 	}
+
+	/* -------------------- */
+	/* !Get Methods */
+	/* -------------------- */
+
+	getPowerState: function(callback) {
+		this.getNodes(function(error, data) {
+			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
+			callback(error, isOn);
+		});
+	}
+
+	/* -------------------- */
+	/* !Set Methods */
+	/* -------------------- */
+
+	setPowerState: function(powerOn, callback) {
+		this.setNode({
+				"nodes": [{
+			        "attributes": {
+			            "state": {
+			                "targetValue": (powerOn) ? "ON" : "OFF"
+			            }
+			        }
+			    }]
+			}, function(error, data) {
+			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
+			callback(error, isOn);
+		});
+	}
+
+	/* -------------------- */
+	/* !API Methods */
+	/* -------------------- */
+
+	getAPIKey: function(callback) {
+		request.post({
+			url: "https://api-prod.bgchprod.info:443/omnia/auth/sessions",
+			headers: {
+				'Content-Type': 'application/vnd.alertme.zoo-6.1+json',
+				'Accept': 'application/vnd.alertme.zoo-6.1+json',
+				'X-Omnia-Client': 'Hive Web Dashboard'
+			},
+			body: JSON.stringify({"sessions": [{"username": this.username, "password": this.password, "caller": "WEB"}]})
+		} , function(error, response, body) {
+			try {
+				var json = JSON.parse(body);
+				if (json.error) {
+					callback(null, json.error.reason)
+				} else {
+					callback(json.sessions[0].sessionId, null);	
+				}
+			} catch (e) {
+				callback(null, "JSON Parse Error\n" + body );
+			}
+		})
+	}
+
+	// getNodes - Get array of Hive Objects
+
+	getNodes: function(callback) {
+		request({
+			url: "https://api-prod.bgchprod.info:443/omnia/nodes",
+			headers: {
+				'Content-Type': 'application/vnd.alertme.zoo-6.1+json',
+				'Accept': 'application/vnd.alertme.zoo-6.1+json',
+				'X-Omnia-Client': 'Hive Web Dashboard',
+				'X-Omnia-Access-Token': this.apiKey
+			}
+		}, callback);
+	}
+
+	// setNode
+
+	setNode: function(object, id) {
+		request.put({
+			url: "https://api-prod.bgchprod.info:443/omnia/nodes/" + this.cachedNode.id,
+			headers: {
+				'Content-Type': 'application/vnd.alertme.zoo-6.1+json',
+				'Accept': 'application/vnd.alertme.zoo-6.1+json',
+				'X-Omnia-Client': 'Hive Web Dashboard',
+				'X-Omnia-Access-Token': this.apiKey
+			},
+			body: JSON.stringify(object)}, callback);		
+	}
+
 };
