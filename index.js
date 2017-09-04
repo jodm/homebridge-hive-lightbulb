@@ -99,23 +99,23 @@ HiveLightbulb.prototype = {
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
 
-		this.findNode(function(node) {
+		// this.findNode(function(node) {
 
-			if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
+		// 	if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 
-				// Characteristic.Saturation
+		// 		// Characteristic.Saturation
 
-				this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this))
-				this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.setSaturation.bind(this))
+		// 		this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this))
+		// 		this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.setSaturation.bind(this))
 
-				// Characteristic.Hue
+		// 		// Characteristic.Hue
 
-				this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this))
-				this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.setHue.bind(this))
+		// 		this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this))
+		// 		this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.setHue.bind(this))
 				
-			}
+		// 	}
 
-		}
+		// }
 
 		/* --------------------- */
 		/* !AccessoryInformation */
