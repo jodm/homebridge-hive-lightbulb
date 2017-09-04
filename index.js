@@ -10,7 +10,7 @@ module.exports = function(homebridge){
 function HiveLightbulb(log, config) {
 	this.log = log;
 	this.name = config.name;
-	this.lightService = new Service.Light();
+	this.lightService = new Service.Lightbulb();
 	this.informationService = new Service.AccessoryInformation();
 	this.username = config.username;
 	this.password = config.password;
