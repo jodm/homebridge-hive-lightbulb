@@ -110,6 +110,7 @@ HiveLightbulb.prototype = {
 					var name = body.nodes[i].name;
 					if (name !== this.name ) {
 						this.log("Ignoring " + name);
+						continue;
 					}
 
 					this.cachedMainData = body.nodes[i];
