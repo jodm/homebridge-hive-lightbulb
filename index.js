@@ -74,7 +74,7 @@ HiveLightbulb.prototype = {
 						if (jsonBody.nodes[i].name !== this.name) { console.log(jsonBody.nodes[i].name + " = " + this.name); continue; }
 
 						this.cachedNode = jsonBody.nodes[i];
-						this.log("findNode: Light Found: with id: " + jsonBody.nodes[i].id + " name:" + name);
+						this.log("findNode: Light Found: with id: " + jsonBody.nodes[i].id + " name:" + jsonBody.nodes[i].name);
 						if(callback) { callback(this.cachedNode, null); }
 						break;
 					}
