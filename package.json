@@ -13,7 +13,7 @@
     "bulb",
     "british gas"
   ],
-    "engines": {
+  "engines": {
     "node": ">=0.12.0",
     "homebridge": ">=0.2.0"
   },
@@ -22,5 +22,8 @@
   },
   "author": "James Mitchell <jamesodmitchell@gmail.com> (www.jodm.co.uk)",
   "license": "ISC",
-  "repository": { "type" : "git", "url" : "https://github.com/jodm/homebridge-hive-lightbulb" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jodm/homebridge-hive-lightbulb"
+  }
 }
