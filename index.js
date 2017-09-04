@@ -19,6 +19,8 @@ function HiveLightbulb(log, config) {
 	this.login(function(key, error) {
 		if(key) {
 			this.findNode(null)
+		} else {
+			this.log("HiveLightbulb: Unable to login. Error: " + error);
 		}
 	})
 	this.cachedNode = null;
@@ -41,7 +43,7 @@ HiveLightbulb.prototype = {
 
 	login: function(callback) {	
 		this.getAPIKey(function(key, error) {
-			this.apiKey = key
+			this.apiKey = key;
 			if(callback) { callback(key, error); }
 		});		
 	},
