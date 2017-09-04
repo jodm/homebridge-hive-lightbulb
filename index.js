@@ -18,6 +18,7 @@ function HiveLightbulb(log, config) {
 	this.mainDataCallbacks = [];
 	this.login(function(key, error) {
 		if(key) {
+			this.log("Key: " + key)
 			this.findNode(function(node, error) {
 				if(error) { this.log("HiveLightbulb: findNode Error: " + error) }
 			}.bind(this))
@@ -157,7 +158,6 @@ HiveLightbulb.prototype = {
 			if (json.error) {
 				callback(null, json.error.reason)
 			} else {			
-				this.log("Key: " + json.sessions[0].sessionId);		
 				callback(json.sessions[0].sessionId, null);	
 			}
 
