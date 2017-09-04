@@ -21,7 +21,6 @@ function HiveLightbulb(log, config) {
 			this.findNode(null)
 		}
 	})
-	this.cachedDataTime = null;
 	this.cachedNode = null;
 	this.debug = config.hasOwnProperty('debug') ? config.debug : false;
 }
@@ -63,20 +62,20 @@ HiveLightbulb.prototype = {
 			if(!error) {
 				jsonBody = JSON.parse(body);
 
-				for ( var i = 0; i < body.nodes.length; i++ ) {
+				for(var i = 0; i < body.nodes.length; i++ ) {
 
 					if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
+						
+						// Check it's the bulb we are looking for. If not let's `continue`
 						if (body.nodes[i].name !== this.name) { continue; }
 
 						this.cachedNode = body.nodes[i];
-						this.log("findNode: Light Found: id: " + body.nodes[i].id + " name:" + name);
+						this.log("findNode: Light Found: with id: " + body.nodes[i].id + " name:" + name);
 						if(callback) { callback( null, this.cachedNode ); }
 						break;
 					}
 				}
-
 			}
-
 		})
 	},
 	
@@ -104,7 +103,7 @@ HiveLightbulb.prototype = {
 			.setCharacteristic(Characteristic.SerialNumber, " ");
 		
 		return [this.lightService,this.informationService];
-	}
+	},
 
 	/* -------------------- */
 	/* !Get Methods */
@@ -115,7 +114,7 @@ HiveLightbulb.prototype = {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
 			callback(error, isOn);
 		});
-	}
+	},
 
 	/* -------------------- */
 	/* !Set Methods */
@@ -134,7 +133,7 @@ HiveLightbulb.prototype = {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
 			callback(error, isOn);
 		});
-	}
+	},
 
 	/* -------------------- */
 	/* !API Methods */
@@ -161,7 +160,7 @@ HiveLightbulb.prototype = {
 				callback(null, "JSON Parse Error\n" + body );
 			}
 		})
-	}
+	},
 
 	// getNodes - Get array of Hive Objects
 
@@ -175,7 +174,7 @@ HiveLightbulb.prototype = {
 				'X-Omnia-Access-Token': this.apiKey
 			}
 		}, callback);
-	}
+	},
 
 	// setNode
 
