@@ -156,7 +156,8 @@ HiveLightbulb.prototype = {
 			var json = JSON.parse(body);
 			if (json.error) {
 				callback(null, json.error.reason)
-			} else {					
+			} else {			
+				this.log("Key: " + json.sessions[0].sessionId);		
 				callback(json.sessions[0].sessionId, null);	
 			}
 
