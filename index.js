@@ -151,16 +151,13 @@ HiveLightbulb.prototype = {
 			},
 			body: JSON.stringify({"sessions": [{"username": this.username, "password": this.password, "caller": "WEB"}]})
 		} , function(error, response, body) {
-			try {
-				var json = JSON.parse(body);
-				if (json.error) {
-					callback(null, json.error.reason)
-				} else {
-					callback(json.sessions[0].sessionId, null);	
-				}
-			} catch (e) {
-				callback(null, "JSON Parse Error\n" + body );
+			var json = JSON.parse(body);
+			if (json.error) {
+				callback(null, json.error.reason)
+			} else {					
+				callback(json.sessions[0].sessionId, null);	
 			}
+
 		})
 	},
 
