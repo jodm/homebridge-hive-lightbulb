@@ -18,7 +18,9 @@ function HiveLightbulb(log, config) {
 	this.mainDataCallbacks = [];
 	this.login(function(key, error) {
 		if(key) {
-			this.findNode(null)
+			this.findNode(function(node, error) {
+				if(error) { this.log("HiveLightbulb: findNode Error: " + error) }
+			})
 		} else {
 			this.log("HiveLightbulb: Unable to login. Error: " + error);
 		}
@@ -57,7 +59,7 @@ HiveLightbulb.prototype = {
 	findNode: function(callback) {
 		
 		/* If we don't have an API key, don't even bother */
-		if (!this.apiKey ) { callback( "Error: findNode - Not logged in." ); }
+		if (!this.apiKey ) { callback(null, "Error: findNode - Not logged in." ); }
 		
 		this.getNodes(function(error, response, body) {	
 
@@ -73,7 +75,7 @@ HiveLightbulb.prototype = {
 
 						this.cachedNode = body.nodes[i];
 						this.log("findNode: Light Found: with id: " + body.nodes[i].id + " name:" + name);
-						if(callback) { callback(this.cachedNode); }
+						if(callback) { callback(this.cachedNode, null); }
 						break;
 					}
 				}
