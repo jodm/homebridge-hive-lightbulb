@@ -173,6 +173,18 @@ HiveLightbulb.prototype = {
 		});
 	},
 
+	setBrightness: function(brightness, callback) {
+
+	},
+
+	setSaturation: function(saturation, callback) {
+
+	},
+
+	setHue: function(hue, callback) {
+
+	},
+
 	/* -------------------- */
 	/* !API Methods */
 	/* -------------------- */
