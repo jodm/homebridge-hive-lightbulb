@@ -109,7 +109,7 @@ HiveLightbulb.prototype = {
 				if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
 					var name = body.nodes[i].name;
 					if (name !== this.name ) {
-						this.log("Ignoring " + sensorName);
+						this.log("Ignoring " + name);
 					}
 
 					this.cachedMainData = body.nodes[i];
