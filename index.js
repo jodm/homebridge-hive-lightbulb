@@ -68,10 +68,10 @@ HiveLightbulb.prototype = {
 
 				for(var i = 0; i < jsonBody.nodes.length; i++ ) {
 
-					if(jsonBody.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || jsonBody.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
+					if(jsonBody.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || jsonBody.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 						
 						// Check it's the bulb we are looking for. If not let's `continue`
-						if (jsonBody.nodes[i].name !== this.name) { continue; }
+						if (jsonBody.nodes[i].name !== this.name) { console.log(jsonBody.nodes[i].name " = " + this.name); continue; }
 
 						this.cachedNode = jsonBody.nodes[i];
 						this.log("findNode: Light Found: with id: " + jsonBody.nodes[i].id + " name:" + name);
