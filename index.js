@@ -20,7 +20,7 @@ function HiveLightbulb(log, config) {
 		if(key) {
 			this.findNode(function(node, error) {
 				if(error) { this.log("HiveLightbulb: findNode Error: " + error) }
-			})
+			}.bind(this))
 		} else {
 			this.log("HiveLightbulb: Unable to login. Error: " + error);
 		}
