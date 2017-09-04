@@ -108,7 +108,7 @@ HiveLightbulb.prototype = {
 
 				if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
 					var name = body.nodes[i].name;
-					if (sensorName !== this.name ) {
+					if (name !== this.name ) {
 						this.log("Ignoring " + sensorName);
 					}
 
