@@ -107,13 +107,13 @@ HiveLightbulb.prototype = {
 			for ( var i = 0; i < body.nodes.length; i++ ) {
 
 				if(body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.light.json#" || body.nodes[i].nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json##") {
-					var sensorName = body.nodes[i].name;
+					var name = body.nodes[i].name;
 					if (sensorName !== this.name ) {
 						this.log("Ignoring " + sensorName);
 					}
 
 					this.cachedMainData = body.nodes[i];
-					this.log("Found motion sensor " + body.nodes[i].id + ", name:" + sensorName + ", motion=" + sensorInMotion + ", from=" + sensorMotionStarted + ", to=" + sensorMotionEnded);
+					this.log("Found light " + body.nodes[i].id + ", name:" + name);
 				}
 			}
 
