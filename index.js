@@ -71,7 +71,7 @@ HiveLightbulb.prototype = {
 
 						this.cachedNode = body.nodes[i];
 						this.log("findNode: Light Found: with id: " + body.nodes[i].id + " name:" + name);
-						if(callback) { callback( null, this.cachedNode ); }
+						if(callback) { callback(this.cachedNode); }
 						break;
 					}
 				}
@@ -110,7 +110,7 @@ HiveLightbulb.prototype = {
 	/* -------------------- */
 
 	getPowerState: function(callback) {
-		this.getNodes(function(error, data) {
+		this.findNode(function(data) {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
 			callback(error, isOn);
 		});
