@@ -116,7 +116,7 @@ HiveLightbulb.prototype = {
 	getPowerState: function(callback) {
 		this.findNode(function(data) {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
-			callback(error, isOn);
+			callback(null, isOn);
 		}.bind(this));
 	},
 
