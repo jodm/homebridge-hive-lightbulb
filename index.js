@@ -47,7 +47,7 @@ HiveLightbulb.prototype = {
 		this.getAPIKey(function(key, error) {
 			this.apiKey = key;
 			if(callback) { callback(key, error); }
-		});		
+		}.bind(this));		
 	},
 	
 	/**
