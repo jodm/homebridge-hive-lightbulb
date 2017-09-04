@@ -90,13 +90,29 @@ HiveLightbulb.prototype = {
 
 	getServices: function() {
 
-		/**
-		 * Sensor status
-		 */
 		this.lightService.getCharacteristic(Characteristic.On).on('get', this.getPowerState.bind(this))
 		this.lightService.getCharacteristic(Characteristic.On).on('set', this.setPowerState.bind(this))
+		this.lightService.getCharacteristic(Characteristic.On).updateValue(true);
 
-		
+		// Characteristic.Brightness
+
+		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
+		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
+
+		if(this.cachedNode.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
+
+			// Characteristic.Saturation
+
+			this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this))
+			this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.setSaturation.bind(this))
+
+			// Characteristic.Hue
+
+			this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this))
+			this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.setHue.bind(this))
+			
+		}
+
 		/* --------------------- */
 		/* !AccessoryInformation */
 		/* --------------------- */
@@ -117,6 +133,24 @@ HiveLightbulb.prototype = {
 		this.findNode(function(data) {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
 			callback(null, isOn);
+		}.bind(this));
+	},
+
+	getBrightness: function(callback) {
+		this.findNode(function(data) {
+			callback(null, data.attributes.brightness.reportedValue);
+		}.bind(this));
+	},
+
+	getSaturation: function(callback) {
+		this.findNode(function(data) {
+			callback(null, data.attributes.hsvSaturation.reportedValue);
+		}.bind(this));
+	},
+
+	getHue: function(callback) {
+		this.findNode(function(data) {
+			callback(null, data.attributes.hsvHue.reportedValue);
 		}.bind(this));
 	},
 
