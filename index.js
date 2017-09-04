@@ -80,7 +80,7 @@ HiveLightbulb.prototype = {
 					}
 				}
 			}
-		})
+		}.bind(this))
 	},
 	
 
@@ -117,7 +117,7 @@ HiveLightbulb.prototype = {
 		this.findNode(function(data) {
 			var isOn = (data.attributes.state.reportedValue == "OFF") ? false : true
 			callback(error, isOn);
-		});
+		}.bind(this));
 	},
 
 	/* -------------------- */
