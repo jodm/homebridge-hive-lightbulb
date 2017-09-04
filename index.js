@@ -99,18 +99,22 @@ HiveLightbulb.prototype = {
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
 
-		if(this.cachedNode.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
+		this.findNode(function(node) {
 
-			// Characteristic.Saturation
+			if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 
-			this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this))
-			this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.setSaturation.bind(this))
+				// Characteristic.Saturation
 
-			// Characteristic.Hue
+				this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this))
+				this.lightService.getCharacteristic(Characteristic.Saturation).on('get', this.setSaturation.bind(this))
 
-			this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this))
-			this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.setHue.bind(this))
-			
+				// Characteristic.Hue
+
+				this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this))
+				this.lightService.getCharacteristic(Characteristic.Hue).on('get', this.setHue.bind(this))
+				
+			}
+
 		}
 
 		/* --------------------- */
