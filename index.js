@@ -101,7 +101,7 @@ HiveLightbulb.prototype = {
 
 		this.findNode(function(node) {
 			this.log(node.nodeType);
-		}
+		});
 		
 		// 	if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 
