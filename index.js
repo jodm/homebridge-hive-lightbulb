@@ -44,6 +44,7 @@ HiveLightbulb.prototype = {
 	 */
 
 	login: function(callback) {	
+		if(this.apiKey) { callback(this.apiKey, null) } 
 		this.getAPIKey(function(key, error) {
 			this.apiKey = key;
 			if(callback) { callback(key, error); }
@@ -99,10 +100,14 @@ HiveLightbulb.prototype = {
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
 
-		this.findNode(function(node, error) {
-			if(error) { this.log(error); return; }
-			this.log(node.nodeType);
-		}.bind(this));
+		this.login(function(key, error) {
+			if(key) {
+				this.findNode(function(node, error) {
+					if(error) { this.log(error); return; }
+					this.log(node.nodeType);
+				}.bind(this));
+			}
+		)};
 		
 		// 	if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 
