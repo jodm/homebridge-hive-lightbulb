@@ -99,8 +99,10 @@ HiveLightbulb.prototype = {
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
 
-		// this.findNode(function(node) {
-
+		this.findNode(function(node) {
+			this.log(node.nodeType);
+		}
+		
 		// 	if(node.nodeType == "http:\/\/alertme.com\/schema\/json\/node.class.colour.tunable.light.json#") {
 
 		// 		// Characteristic.Saturation
@@ -229,7 +231,7 @@ HiveLightbulb.prototype = {
 
 	// setNode
 
-	setNode: function(object, id) {
+	setNode: function(object, callback) {
 		request.put({
 			url: "https://api-prod.bgchprod.info:443/omnia/nodes/" + this.cachedNode.id,
 			headers: {
