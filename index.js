@@ -99,7 +99,8 @@ HiveLightbulb.prototype = {
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this))
 		this.lightService.getCharacteristic(Characteristic.Brightness).on('get', this.setBrightness.bind(this))
 
-		this.findNode(function(node) {
+		this.findNode(function(node, error) {
+			if(error) { this.log(error); return; }
 			this.log(node.nodeType);
 		});
 		
